@@ -3,11 +3,10 @@ import { anthropic, MODEL } from '@/lib/anthropic';
 import { createClient } from '@/lib/supabase/server';
 import { buildVSLPrompt } from '@/lib/prompts/vslPrompt';
 import type { VSLInputs, VSLOutput } from '@/types';
-const supabase = await createClient();
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 

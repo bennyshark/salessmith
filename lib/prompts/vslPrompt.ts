@@ -1,82 +1,105 @@
 import type { VSLInputs } from '@/types';
 
 const hookInstructions: Record<string, string> = {
-  shock_stat: 'Open with a shocking, counterintuitive statistic or fact that reframes the problem.',
-  story: 'Open mid-scene in a relatable story — no preamble. Drop the viewer directly into a specific moment.',
-  bold_promise: 'Make a bold, specific, time-bound promise in the first sentence.',
-  question: 'Ask a painful, specific question the exact right viewer will answer "yes" to immediately.',
-  controversy: 'Open by contradicting a widely-held belief in the niche. Be polarizing on purpose.',
+  shock_stat: 'Open with a counterintuitive fact or statistic that reframes the problem. The reader should think "wait, that can\'t be right" — and keep reading to find out.',
+  story: 'Open mid-scene. No setup, no intro. Drop the viewer into a specific moment — a feeling, a situation, a conversation overheard. They should feel like they missed something and need to catch up.',
+  bold_promise: 'State the outcome in the first sentence. Specific, measurable, believable. The reader should immediately think "if that\'s true, I need to keep watching."',
+  question: 'Ask the exact question that is already running on a loop in your viewer\'s head. So specific and so accurate that they feel seen.',
+  controversy: 'Challenge something your audience believes — a common practice, a popular piece of advice, an industry norm. Be direct. Be willing to lose the wrong people to gain the right ones.',
 };
 
 const toneInstructions: Record<string, string> = {
-  casual: "Write like you're talking to a friend over coffee. Contractions everywhere. Short sentences.",
-  authoritative: "Confident, commanding, expert-led. Every claim backed by logic. No hedging.",
-  emotional: "Pull on emotional triggers — loss, fear, hope, transformation. Specific sensory language.",
-  hype: "High energy, enthusiastic, lots of emphasis. Reads like the speaker is genuinely excited.",
+  casual: 'Write exactly like you talk. Contractions everywhere. Short sentences. Incomplete sentences if they hit harder. The viewer should feel like a friend is letting them in on something.',
+  authoritative: 'Confident and precise. Every claim supported by logic or evidence. No hedging, no "maybe", no "could be". The viewer should feel they\'re learning from someone who has done this.',
+  emotional: 'Lean into feeling — specific, sensory, human. Name the emotions without narrating them. Show the moment, not the label.',
+  hype: 'High energy. The speaker is genuinely excited. Short punchy sentences. Momentum builds. By the CTA the viewer feels like missing out would be a mistake.',
 };
 
 export function buildVSLPrompt(inputs: VSLInputs): string {
-  return `You are a veteran video sales letter copywriter who has written scripts that generated over $50M in revenue.
+  return `You are writing a video sales letter script. Your job is to hold attention, build desire, and convert a viewer who is skeptical and distracted.
 
-Write a complete VSL script using the brief below.
+## THE BRIEF
+Product: ${inputs.productName}
+What it is: ${inputs.productDescription}
+Who it's for: ${inputs.targetAudience}
+Problem it solves: ${inputs.mainProblem}
+Transformation delivered: ${inputs.transformation}
+Price: ${inputs.price}
+Guarantee: ${inputs.guarantee}
+Bonuses: ${inputs.bonuses || 'none'}
 
-## PRODUCT BRIEF
-- Product Name: ${inputs.productName}
-- What It Is: ${inputs.productDescription}
-- Target Audience: ${inputs.targetAudience}
-- Main Problem It Solves: ${inputs.mainProblem}
-- Transformation It Delivers: ${inputs.transformation}
-- Price: ${inputs.price}
-- Guarantee: ${inputs.guarantee}
-- Bonuses: ${inputs.bonuses || 'None'}
+## STYLE
+Hook: ${hookInstructions[inputs.hookStyle]}
+Tone: ${toneInstructions[inputs.tone]}
 
-## STYLE INSTRUCTIONS
-- Hook Style: ${hookInstructions[inputs.hookStyle]}
-- Tone: ${toneInstructions[inputs.tone]}
+## THE 14 SECTIONS — write all of them
 
-## VSL STRUCTURE (write ALL sections)
-1. HOOK (60-90 words) — Stop the scroll, create an open loop
-2. OPEN_LOOP (80-120 words) — Tease what they'll discover
-3. STORY (150-200 words) — Relatable story establishing credibility
-4. PROBLEM (100-150 words) — Agitate the pain. Make them feel it.
-5. AGITATE (80-120 words) — Pour salt in the wound. What happens if nothing changes?
-6. SOLUTION (100-150 words) — Introduce the product as the inevitable answer
-7. HOW_IT_WORKS (120-180 words) — Explain the mechanism
-8. PROOF (100-150 words) — Social proof, results, testimonials
-9. OFFER_STACK (120-180 words) — Present everything they get, build value
-10. PRICE_REVEAL (80-100 words) — Anchor high, reveal the real price with drama
-11. GUARANTEE (60-80 words) — Make the risk disappear
-12. URGENCY (60-80 words) — Real reason to act now
-13. CTA (60-90 words) — Clear, direct, remove hesitation
-14. CLOSE (40-60 words) — Final emotional pull, restate transformation
+1. **HOOK** (50-80 words)
+   The first thing the viewer hears. Must create an open loop or an emotional reaction in under 10 seconds. If this section doesn't work, nothing else matters.
 
-## RULES
-- Write in ${inputs.tone} tone throughout — stay consistent
-- Do NOT use corporate language, clichés, or buzzwords
-- Write as if this will be spoken aloud
-- Speaker directions in [brackets] are optional (e.g., [pause], [look at camera])
-- Specific always beats vague — use numbers, timeframes, specific details
+2. **OPEN_LOOP** (60-100 words)
+   Tease what they're about to discover. Make a promise you'll fulfill later. Don't reveal yet — create hunger.
 
-## OUTPUT FORMAT
-Return ONLY a valid JSON object. No preamble. No markdown. Raw JSON only.
+3. **STORY** (120-180 words)
+   A specific, relatable story. The viewer should see themselves in it. Establish credibility through experience, not credentials.
 
+4. **PROBLEM** (80-120 words)
+   Name the problem precisely. Go deeper than surface symptoms — identify the root cause they haven't identified themselves.
+
+5. **AGITATE** (60-90 words)
+   What happens if nothing changes? Make the cost of inaction feel real and immediate.
+
+6. **SOLUTION** (80-120 words)
+   Introduce the product as the natural answer to everything just described. Not a pitch — a revelation.
+
+7. **HOW_IT_WORKS** (100-150 words)
+   The mechanism. Make the viewer understand why this works when other things haven't. Simple, clear, logical.
+
+8. **PROOF** (80-120 words)
+   Specific results from real use. Names, numbers, timeframes. Write plausible, specific examples if none are provided.
+
+9. **OFFER_STACK** (100-150 words)
+   Build the value. Everything included, presented as a stack. Each item gets a line. Momentum builds toward the price.
+
+10. **PRICE_REVEAL** (60-90 words)
+    Anchor high. Reveal the real price as a contrast. The viewer should feel like they're getting something worth far more.
+
+11. **GUARANTEE** (50-70 words)
+    Remove risk completely. Make the guarantee feel generous and specific.
+
+12. **URGENCY** (50-70 words)
+    A real reason to act now — not "limited time offer." Scarcity or consequence that the viewer actually believes.
+
+13. **CTA** (50-80 words)
+    Tell them exactly what to do and what happens next. Remove any confusion or hesitation about the action step.
+
+14. **CLOSE** (40-60 words)
+    One final emotional pull. Remind them of the transformation. Make them picture their life after.
+
+## WRITING RULES
+- Write as spoken word — read it aloud in your head as you write it
+- Tone is ${inputs.tone} throughout — don't drift
+- Specific beats vague in every sentence
+- Speaker notes in [brackets] are optional — use only when they genuinely change how a line lands
+- No corporate language, no buzzwords, no passive voice
+- Each section must flow naturally into the next — no hard stops
+
+## OUTPUT — raw JSON only, no markdown, no preamble
 {
   "sections": [
     {
       "id": "hook",
       "label": "Hook",
       "content": "...",
-      "estimatedSeconds": 25
+      "estimatedSeconds": 30
     }
   ],
-  "totalWordCount": 1450,
+  "totalWordCount": 1400,
   "estimatedMinutes": 11,
   "topObjections": [
-    "Objection 1 and how the script addresses it",
-    "Objection 2 and how the script addresses it",
-    "Objection 3 and how the script addresses it",
-    "Objection 4 and how the script addresses it",
-    "Objection 5 and how the script addresses it"
+    "Objection + one sentence on how the script addresses it"
   ]
-}`;
+}
+
+Write all 14 sections. Make this script something the client would actually use.`;
 }
