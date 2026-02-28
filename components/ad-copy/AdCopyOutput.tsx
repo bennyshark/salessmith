@@ -1,17 +1,25 @@
 'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from 'react';
 import AdCopyVariantCard from './AdCopyVariantCard';
-import type { AdCopyOutput as TAdCopyOutput } from '@/types';
-import { platformLabels } from '@/lib/utils';
+import type { AdCopyOutput as TAdCopyOutput, AdPlatform } from '@/types';
 import { Info } from 'lucide-react';
+
+const PLATFORM_LABELS: Record<string, string> = {
+  facebook: 'Facebook',
+  google: 'Google',
+  tiktok: 'TikTok',
+  youtube: 'YouTube',
+  native: 'Native Ads',
+};
 
 interface AdCopyOutputProps {
   output: TAdCopyOutput;
 }
 
 export default function AdCopyOutput({ output }: AdCopyOutputProps) {
-  const platforms = [...new Set(output.variants.map(v => v.platform))];
+  const platforms = [...new Set(output.variants.map(v => v.platform))] as AdPlatform[];
+  const [active, setActive] = useState<AdPlatform>(platforms[0]);
 
   return (
     <div className="space-y-4">
@@ -25,27 +33,31 @@ export default function AdCopyOutput({ output }: AdCopyOutputProps) {
         </div>
       )}
 
-      <Tabs defaultValue={platforms[0]}>
-        <TabsList className="bg-zinc-900 border border-zinc-800">
-          {platforms.map(platform => (
-            <TabsTrigger key={platform} value={platform}
-              className="data-[state=active]:bg-violet-600/20 data-[state=active]:text-violet-300">
-              {platformLabels[platform]}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+      {/* Platform tabs */}
+      <div className="flex gap-2 flex-wrap border-b border-zinc-800 pb-3">
+        {platforms.map(platform => (
+          <button
+            key={platform}
+            onClick={() => setActive(platform)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all ${
+              active === platform
+                ? 'bg-violet-600/20 border-violet-600/50 text-violet-300'
+                : 'bg-zinc-800 border-zinc-700 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200'
+            }`}
+          >
+            {PLATFORM_LABELS[platform] ?? platform}
+          </button>
+        ))}
+      </div>
 
-        {platforms.map(platform => {
-          const variants = output.variants.filter(v => v.platform === platform);
-          return (
-            <TabsContent key={platform} value={platform} className="mt-4 space-y-3">
-              {variants.map((variant, i) => (
-                <AdCopyVariantCard key={i} variant={variant} index={i} />
-              ))}
-            </TabsContent>
-          );
-        })}
-      </Tabs>
+      {/* Variants */}
+      <div className="space-y-3">
+        {output.variants
+          .filter(v => v.platform === active)
+          .map((variant, i) => (
+            <AdCopyVariantCard key={i} variant={variant} index={i} />
+          ))}
+      </div>
     </div>
   );
 }

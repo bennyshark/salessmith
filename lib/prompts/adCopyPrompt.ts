@@ -2,7 +2,7 @@ import type { AdCopyInputs, AdPlatform } from '@/types';
 
 const platformSpecs: Record<AdPlatform, string> = {
   facebook: 'Primary text: 125 chars ideal (max 500). Headline: 40 chars max. Description: 30 chars max. Use line breaks and conversational tone.',
-  google: 'Headline 1-3: 30 chars each. Description 1-2: 90 chars each. No exclamation marks in headlines. Focus on keywords and direct benefit.',
+  google: 'Headline: 30 chars max. Primary text: write 2 descriptions of 90 chars each separated by a newline. No exclamation marks in headlines. Focus on keywords and direct benefit. Do NOT create a GOOGLE_FULL object.',
   tiktok: 'Caption: 150 chars ideal. Very casual, Gen-Z friendly tone. Use hooks like "POV:", "tell me why". Short punchy sentences.',
   youtube: 'Title: 70 chars max. Description first 2 lines visible before fold — make them count. Use "Watch this if..." style hooks.',
   native: 'Headline: 80 chars max (curiosity-gap style). Body: 250 chars max. Must not feel like an ad. Blend with editorial content.',
@@ -38,14 +38,23 @@ ${platformsRequested}
 5. Use different hook types across variants (curiosity, social proof, fear, desire, story)
 6. Never start two variants with the same opening word
 7. Each variant must feel completely different — not just shuffled words
+8. primaryText must NEVER be empty — every variant requires a full body copy
+
+## STRICT PLATFORM RULES
+- The "platform" field must ONLY ever be one of these exact lowercase strings: facebook, google, tiktok, youtube, native
+- NEVER invent new platform keys like "google_full", "google_rsa", "google_ads", or any variation
+- NEVER create a separate GOOGLE_FULL object or any nested ad group objects
+- Treat google exactly like every other platform — one flat variant object per variant
+- Every single variant must have a non-empty "primaryText" field with real ad copy
 
 ## OUTPUT FORMAT
 Return ONLY a valid JSON object. No preamble, no explanation, no markdown code blocks. Just raw JSON.
 
+The exact structure must be:
 {
   "variants": [
     {
-      "platform": "platform_name",
+      "platform": "facebook",
       "headline": "...",
       "primaryText": "...",
       "description": "...",
@@ -56,5 +65,6 @@ Return ONLY a valid JSON object. No preamble, no explanation, no markdown code b
   "notes": "2-3 sentences of copywriter notes on the strategy used"
 }
 
-Generate all ${inputs.variantCount} variants per platform now.`;
+Generate exactly ${inputs.variantCount} variants for each of these platforms: ${inputs.platforms.join(', ')}.
+Total variants in the array must be exactly ${inputs.variantCount * inputs.platforms.length}.`;
 }

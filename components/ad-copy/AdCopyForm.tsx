@@ -88,7 +88,7 @@ export default function AdCopyForm({ onGenerate, isLoading }: AdCopyFormProps) {
       </div>
 
       <div className="space-y-1.5">
-        <Label>Main Benefit *</Label>
+        <Label>Main Benefit/Features *</Label>
         <Input value={inputs.mainBenefit} onChange={e => update('mainBenefit', e.target.value)}
           placeholder="e.g. Lose 10-20 lbs in 30 days without giving up your favorite foods"
           required className="bg-zinc-800 border-zinc-700" />
@@ -156,9 +156,16 @@ export default function AdCopyForm({ onGenerate, isLoading }: AdCopyFormProps) {
         </Select>
       </div>
 
-      <GenerateButton isLoading={isLoading} disabled={inputs.platforms.length === 0}
-        className="w-full"
-        label={`Generate ${inputs.variantCount * inputs.platforms.length} Ad Variants`} />
+      <GenerateButton
+  isLoading={isLoading}
+  disabled={inputs.platforms.length === 0}
+  className="w-full"
+  label={
+    inputs.platforms.length === 1
+      ? `Generate ${inputs.variantCount} Ad Variants`
+      : `Generate ${inputs.variantCount} Variants × ${inputs.platforms.length} Platforms`
+  }
+/>
     </form>
   );
 }
