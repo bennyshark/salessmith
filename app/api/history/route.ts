@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function GET(request: Request) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient(); // ← await here
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
@@ -25,7 +25,8 @@ export async function GET(request: Request) {
     if (error) throw error;
 
     return NextResponse.json({ items: data });
-  } catch {
+  } catch (error) {
+    console.error('History fetch error:', error);
     return NextResponse.json({ error: 'Failed to fetch history' }, { status: 500 });
   }
 }

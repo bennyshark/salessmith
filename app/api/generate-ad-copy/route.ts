@@ -3,6 +3,7 @@ import { anthropic, MODEL, MAX_TOKENS } from '@/lib/anthropic';
 import { createClient } from '@/lib/supabase/server';
 import { buildAdCopyPrompt } from '@/lib/prompts/adCopyPrompt';
 import type { AdCopyInputs, AdCopyOutput } from '@/types';
+const supabase = await createClient();
 
 export async function POST(request: Request) {
   try {
